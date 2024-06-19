@@ -1,5 +1,8 @@
 name: 'Sync Docker Images'
 description: 'Sync Docker Images between Registries'
+branding:
+  icon: 'archive'
+  color: 'green'
 inputs:
   source:
     description: 'Source Registry'
