@@ -1,0 +1,41 @@
+name: 'Sync Docker Images'
+description: 'Sync Docker Images between Registries'
+inputs:
+  source:
+    description: 'Source Registry'
+    required: true
+    default: 'docker.io'
+  source-credential:
+    description: 'Source Registry username:password'
+    required: false
+  destination:
+    description: 'Destination Registry'
+    required: true
+  destination-credential:
+    description: 'Destination Registry username:password'
+    required: false
+  sync:
+    description: 'Repos for Sync'
+    required: false
+  copy:
+    description: 'Repos for Copy'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Set GitHub Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+
+    - name: Sync Docker Images
+      run: sync.sh
+      shell: bash
+      env:
+        SOURCE: ${{ inputs.source }}
+        SOURCE_CREDENTIAL: ${{ inputs.source-credential }}
+        DESTINATION: ${{ inputs.destination }}
+        DESTINATION_CREDENTIAL: ${{ inputs.destination-credential }}
+        SYNC: ${{ inputs.sync }}
+        COPY: ${{ inputs.copy }}
