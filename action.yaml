@@ -9,19 +9,19 @@ inputs:
     required: true
     default: 'docker.io'
   source-credential:
-    description: 'Source Registry username:password'
+    description: 'Source Registry Credential. For example: username:password'
     required: false
   destination:
     description: 'Destination Registry'
     required: true
   destination-credential:
-    description: 'Destination Registry username:password'
+    description: 'Destination Registry Credential. For example: username:password'
     required: false
   sync:
-    description: 'Repos for Sync'
+    description: 'Repos for Sync (Support Multiple Lines). For example: nginx ikrong\nThis will sync nginx and all tags to ikrong, such as ikrong/nginx:latest'
     required: false
   copy:
-    description: 'Repos for Copy'
+    description: 'Repos for Copy (Support Multiple Lines). For example: nginx:latest ikrong/nginx:1.11.3\nThis will only copy nginx:latest to ikrong/nginx:1.11.3'
     required: false
 runs:
   using: "composite"

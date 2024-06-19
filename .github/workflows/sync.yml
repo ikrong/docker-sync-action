@@ -9,7 +9,7 @@ on:
       destination:
         description: 'Destination repository'
         required: true
-        default: 'docker.io'
+        default: 'registry.cn-beijing.aliyuncs.com'
       sync:
         description: 'Repos for Sync'
         required: false
