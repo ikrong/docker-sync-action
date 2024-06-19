@@ -1,7 +1,7 @@
 function login() {
     echo "Login to $1"
     u=$(echo $2 | cut -d':' -f1)
-    p=$(echo $2 | cut -d':' -f2)
+    p=$(echo $2 | cut -d':' -f2-)
     if [ "$u" = "" ]; then
         return
     fi
