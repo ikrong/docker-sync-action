@@ -18,10 +18,10 @@ inputs:
     description: 'Destination Registry Credential. For example: username:password'
     required: false
   sync:
-    description: 'Repos for Sync (Support Multiple Lines). For example: nginx ikrong\nThis will sync nginx and all tags to ikrong, such as ikrong/nginx:latest'
+    description: 'Repos for Sync (Support Multiple Lines). For example: nginx ikrong This will sync nginx and all tags to ikrong, such as ikrong/nginx:latest'
     required: false
   copy:
-    description: 'Repos for Copy (Support Multiple Lines). For example: nginx:latest ikrong/nginx:1.11.3\nThis will only copy nginx:latest to ikrong/nginx:1.11.3'
+    description: 'Repos for Copy (Support Multiple Lines). For example: nginx:latest ikrong/nginx:1.11.3 This will only copy nginx:latest to ikrong/nginx:1.11.3'
     required: false
 runs:
   using: "composite"

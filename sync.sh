@@ -12,7 +12,7 @@ function login() {
 }
 
 function run_with_lines() {
-    echo $1 | while IFS= read -r line; do
+    echo -e "$1" | tr ';' '\n' | while read -r line; do
       $2 "$line"
     done
 }
