@@ -17,11 +17,11 @@ function login() {
 }
 
 function run_with_lines() {
-    echo -e "$1" | tr ';' '\n' | while read -r line; do
+    while read -r line; do
         if [ "$1" != "" ]; then
             $2 "$line"
         fi
-    done
+    done <<< $(echo -e "$1" | tr ';' '\n')
 }
 
 function sync() {
