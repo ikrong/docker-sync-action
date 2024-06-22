@@ -28,6 +28,12 @@ function sync() {
     echo "::group::Syncing $1"
     arr=($1 )
     skopeo sync --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
+    # 判断是否执行成功
+    if [ $? -ne 0 ]; then
+        echo "::error::Syncing $1 failed"
+        echo "::endgroup::"
+        exit 1
+    fi
     echo "::endgroup::"
 }
 
@@ -35,6 +41,12 @@ function copy() {
     echo "::group::Coping $1"
     arr=($1 )
     skopeo copy "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
+    # 判断是否执行成功
+    if [ $? -ne 0 ]; then
+        echo "::error::Coping $1 failed"
+        echo "::endgroup::"
+        exit 1
+    fi
     echo "::endgroup::"
 }
 
