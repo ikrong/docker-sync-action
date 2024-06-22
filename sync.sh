@@ -11,7 +11,7 @@ function login() {
     echo $p | skopeo login --password-stdin -u $u $1
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
-        echo "::error Login to $1 failed"
+        echo "::error::Login to $1 failed"
         exit 1
     fi
 }
