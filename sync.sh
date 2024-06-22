@@ -24,10 +24,14 @@ function run_with_lines() {
     done <<< $(echo -e "$1" | tr ';' '\n')
 }
 
+function exec_skopeo() {
+    docker run -ti --rm -v ${XDG_RUNTIME_DIR}/containers/auth.json:${XDG_RUNTIME_DIR}/containers/auth.json quay.io/skopeo/stable:latest $@
+}
+
 function sync() {
     echo "::group::Syncing $1"
     arr=($1 )
-    skopeo --debug sync -a -f v2s1 --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
+    exec_skopeo --debug sync -a -f v2s1 --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Syncing $1 failed"
@@ -40,7 +44,7 @@ function sync() {
 function copy() {
     echo "::group::Coping $1"
     arr=($1 )
-    skopeo --debug copy -a -f v2s1 "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
+    exec_skopeo --debug copy -a -f v2s1 "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Coping $1 failed"
