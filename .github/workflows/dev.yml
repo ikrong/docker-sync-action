@@ -1,4 +1,4 @@
-name: Sync Docker Images
+name: Sync Docker Images Dev
 on: 
   workflow_dispatch:
     inputs:
