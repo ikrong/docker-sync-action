@@ -25,7 +25,9 @@ function run_with_lines() {
 }
 
 function exec_skopeo() {
-    docker run -t --rm -v ${XDG_RUNTIME_DIR}/containers/auth.json:${XDG_RUNTIME_DIR}/containers/auth.json quay.io/skopeo/stable:latest $@
+    echo "${XDG_RUNTIME_DIR}/containers/auth.json"
+    cat "${XDG_RUNTIME_DIR}/containers/auth.json"
+    docker run -t --rm -v ${XDG_RUNTIME_DIR}/containers/auth.json:/containers/auth.json -e "REGISTRY_AUTH_FILE=/containers/auth.json" quay.io/skopeo/stable:latest $@
 }
 
 function sync() {
