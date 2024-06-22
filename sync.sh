@@ -9,29 +9,39 @@ function login() {
         return
     fi
     echo $p | skopeo login --password-stdin -u $u $1
+    # 判断是否执行成功
+    if [ $? -ne 0 ]; then
+        echo "::error Login to $1 failed"
+        exit 1
+    fi
 }
 
 function run_with_lines() {
     echo -e "$1" | tr ';' '\n' | while read -r line; do
-      $2 "$line"
+        if [ "$1" != "" ]; then
+            $2 "$line"
+        fi
     done
 }
 
 function sync() {
-    echo "Syncing $1"
+    echo "::group::Syncing $1"
     arr=($1 )
     skopeo sync --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
+    echo "::endgroup::"
 }
 
 function copy() {
-    echo "Coping $1"
+    echo "::group::Coping $1"
     arr=($1 )
     skopeo copy "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
+    echo "::endgroup::"
 }
 
+echo "::group::Login"
 login $SOURCE $SOURCE_CREDENTIAL
-
 login $DESTINATION $DESTINATION_CREDENTIAL
+echo "::endgroup::"
 
 if [ "$SYNC" != "" ]; then
     run_with_lines "$SYNC" sync
