@@ -25,7 +25,7 @@ function run_with_lines() {
 }
 
 function exec_skopeo() {
-    docker run -ti --rm -v ${XDG_RUNTIME_DIR}/containers/auth.json:${XDG_RUNTIME_DIR}/containers/auth.json quay.io/skopeo/stable:latest $@
+    docker run -t --rm -v ${XDG_RUNTIME_DIR}/containers/auth.json:${XDG_RUNTIME_DIR}/containers/auth.json quay.io/skopeo/stable:latest $@
 }
 
 function sync() {
