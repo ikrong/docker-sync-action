@@ -50,6 +50,9 @@ function copy() {
     echo "::endgroup::"
 }
 
+sudo apt-get -y update
+sudo apt-get -y install skopeo
+
 docker -v
 skopeo -v
 
