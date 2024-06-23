@@ -57,6 +57,8 @@ function install_latest_skopeo() {
     sudo apt -o Dpkg::Options::="--force-overwrite" install skopeo
 }
 
+install_latest_skopeo
+
 docker -v
 skopeo -v
 
