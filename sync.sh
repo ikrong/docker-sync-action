@@ -27,7 +27,7 @@ function run_with_lines() {
 function sync() {
     echo "::group::Syncing $1"
     arr=($1 )
-    skopeo --debug sync --multi-arch all --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
+    skopeo sync --multi-arch all --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Syncing $1 failed"
@@ -40,7 +40,7 @@ function sync() {
 function copy() {
     echo "::group::Coping $1"
     arr=($1 )
-    skopeo --debug copy --multi-arch all "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
+    skopeo copy --multi-arch all "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Coping $1 failed"
