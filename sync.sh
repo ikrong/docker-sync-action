@@ -48,7 +48,7 @@ function sync() {
 function copy() {
     echo "::group::Coping $1"
     arr=($1 )
-    exec_skopeo copy -a all "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
+    exec_skopeo copy -a "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Coping $1 failed"
