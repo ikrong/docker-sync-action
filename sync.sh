@@ -1,5 +1,4 @@
 function login() {
-    echo "Login to $1"
     u=$(echo $2 | cut -d':' -f1)
     p=$(echo $2 | cut -d':' -f2-)
     if [ "$u" = "" ]; then
@@ -8,6 +7,7 @@ function login() {
     if [ "$p" = "" ]; then
         return
     fi
+    echo "Login to $1"
     echo $p | skopeo login --password-stdin -u $u $1
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
@@ -24,10 +24,18 @@ function run_with_lines() {
     done <<< $(echo -e "$1" | tr ';' '\n')
 }
 
+function exec_skopeo() {
+    if [ -f "${XDG_RUNTIME_DIR}/containers/auth.json" ]; then
+      docker run --rm -v ${XDG_RUNTIME_DIR}/containers/auth.json:/auth.json -e "REGISTRY_AUTH_FILE=/auth.json" quay.io/skopeo/stable:latest $@
+    else
+      docker run --rm quay.io/skopeo/stable:latest $@
+    fi
+}
+
 function sync() {
     echo "::group::Syncing $1"
     arr=($1 )
-    skopeo sync --multi-arch all --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
+    exec_skopeo sync --multi-arch all --src docker --dest docker "$SOURCE/${arr[0]}" "$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Syncing $1 failed"
@@ -40,7 +48,7 @@ function sync() {
 function copy() {
     echo "::group::Coping $1"
     arr=($1 )
-    skopeo copy --multi-arch all "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
+    exec_skopeo copy --multi-arch all "docker://$SOURCE/${arr[0]}" "docker://$DESTINATION/${arr[1]}"
     # 判断是否执行成功
     if [ $? -ne 0 ]; then
         echo "::error::Coping $1 failed"
@@ -51,18 +59,21 @@ function copy() {
 }
 
 function install_latest_skopeo() {
-    echo "::group::Install Skopeo"
-    echo 'deb http://download.opensuse.org/repositories/home:/alvistack/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/home:alvistack.list
-    curl -fsSL https://download.opensuse.org/repositories/home:alvistack/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_alvistack.gpg > /dev/null
-    sudo apt update
-    sudo apt -o Dpkg::Options::="--force-overwrite" install skopeo
+    echo "::group::Pulling Latest Skopeo"
+    docker pull quay.io/skopeo/stable:latest
+    # 判断是否执行成功
+    if [ $? -ne 0 ]; then
+        echo "::error::Pulling Latest Skopeo failed"
+        echo "::endgroup::"
+        exit 1
+    fi
     echo "::endgroup::"
 }
 
 install_latest_skopeo
 
 docker -v
-skopeo -v
+exec_skopeo --version
 
 echo "::group::Login"
 login $SOURCE $SOURCE_CREDENTIAL
